@@ -9,7 +9,7 @@ services:
     ports:
       - 443:443
     volumes:
-      - wordpress-v:/var/www/html/
+      - wordpress-v:/var/www/html/wordpress
     networks:
       - inception-network
     restart: always
@@ -34,7 +34,7 @@ services:
     networks:
       - inception-network
     volumes:
-      - wordpress-v:/var/www/html/
+      - wordpress-v:/var/www/html/wordpress
     env_file:
       - .env
 
