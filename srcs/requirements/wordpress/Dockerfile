@@ -23,4 +23,6 @@ COPY ./requirements/wordpress/conf/config.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/config.sh
 
+EXPOSE 9000
+
 ENTRYPOINT ["/usr/local/bin/config.sh"]

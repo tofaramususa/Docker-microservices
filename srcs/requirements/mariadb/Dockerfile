@@ -10,5 +10,5 @@ COPY ./requirements/mariadb/conf/config.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/config.sh
 
 EXPOSE 3306
-CMD ["/usr/local/bin/config.sh"]
 
+CMD ["/usr/local/bin/config.sh"]

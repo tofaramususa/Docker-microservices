@@ -1,4 +1,0 @@
-Observations:
-We need to configure to volumes - database -> mariadb and wordpress
-The nginx talks to wordpress container which talks to db container
-Requirements: 3 containers and 2 volumes -- docker network
