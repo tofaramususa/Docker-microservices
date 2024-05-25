@@ -1,0 +1,12 @@
+Terms:
+Payload - the actual message - encaspulated by the information of the network protocol
+InterProcessCommunication
+Network Socket
+Unix domain Socket
+Asynchronous and synchronous
+Socket Address -- triad of transport protocol, ip address and port number
+Software Endpoint
+netstat - list established sockets and related information
+UDP/TCP - 
+Listening State -
+encaspulation of header state -- 
