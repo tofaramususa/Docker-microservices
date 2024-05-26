@@ -5,7 +5,7 @@ USER root
 RUN apt-get update && apt-get install -y \
 	mariadb-server \
 	mariadb-client
-COPY ./requirements/mariadb/conf/config.sh /usr/local/bin/
+COPY ./tools/config.sh /usr/local/bin/
 
 RUN chmod +x /usr/local/bin/config.sh
 

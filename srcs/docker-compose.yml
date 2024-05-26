@@ -3,11 +3,12 @@ version: '3.1'
 services:
   nginx:
     container_name: nginx
-    build: ./requirements/nginx
+    build: 
+      context: ./requirements/nginx/
     depends_on:
       - wordpress
     ports:
-      - 443:443
+      - "443:443"
     volumes:
       - wordpress-v:/var/www/html/wordpress
     networks:
@@ -16,7 +17,8 @@ services:
 
   mariadb:
     container_name: mariadb
-    build: ./requirements/mariadb
+    build: 
+      context: ./requirements/mariadb/
     volumes:
       - mariadb-v:/var/lib/mysql
     restart: always
@@ -29,7 +31,8 @@ services:
     container_name: wordpress
     depends_on:
       - mariadb
-    build: ./requirements/wordpress
+    build: 
+      context: ./requirements/wordpress/
     restart: always
     networks:
       - inception-network
@@ -41,12 +44,14 @@ services:
 volumes:
   mariadb-v:
     driver_opts:
-      device: home/${USER}/data/mysql
-      o: bind
+      type: 'none'
+      device: home/${USER}/data/mariadb
+      o: 'bind'
   wordpress-v:
     driver_opts:
+      type: 'none'
       device: home/${USER}/data/wordpress
-      o: bind
+      o: 'bind'
 
 networks:
   inception-network:
