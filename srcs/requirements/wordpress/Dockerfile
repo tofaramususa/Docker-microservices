@@ -1,5 +1,4 @@
 FROM	alpine:3.19
-# https://hub.docker.com/_/alpine latest version 3.18.x
 
 ARG		PHP_VERSION=81
 		# WORDPRESS_DB_NAME \
@@ -41,11 +40,11 @@ RUN		sed -i "s|listen = 127.0.0.1:9000|listen = 9000|g" \
 
 RUN 	mkdir -p /var/www/html/wordpress
 
+WORKDIR	/var/www/html/wordpress
+
 RUN		curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
 		&& chmod +x wp-cli.phar && php wp-cli.phar --info \
 		&& cp wp-cli.phar /usr/local/bin/wp
-
-WORKDIR	/var/www/html/wordpress
 
 COPY	./conf/wp-config-create.sh .
 

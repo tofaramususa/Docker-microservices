@@ -1,34 +1,67 @@
 #!/bin/sh
 
-DB_DIRECTORY=/var/lib/mysql
-RUNNING_DIRECTORY=/run/mysqld
-INIT_SH=tmp.sql
-OPTIONS="--user=mysql --skip-name-resolve --skip-networking=0 --bind-address=0.0.0.0"
+# Configuration
+DB_DIRECTORY="/var/lib/mysql"
+RUNNING_DIRECTORY="/run/mysqld"
+INIT_SQL="/var/lib/mysql/init_db.sql"
+TEMP_SQL="/tmp/init_db_processed.sql"
+MYSQL_USER="mysql"
 
-# Ensure the data directory and run directory exist
-mkdir -p $DB_DIRECTORY $RUNNING_DIRECTORY
-chown -R mysql:mysql $DB_DIRECTORY $RUNNING_DIRECTORY
+# MySQL options
+OPTIONS="--user=$MYSQL_USER \
+         --skip-name-resolve \
+         --skip-networking=0 \
+         --bind-address=0.0.0.0"
+
+# Function to log messages
+log_message() {
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $1"
+}
+
+# Ensure correct permissions
+set_permissions() {
+    if ! chown -R $MYSQL_USER:$MYSQL_USER $DB_DIRECTORY $RUNNING_DIRECTORY; then
+        log_message "Failed to set permissions on $DB_DIRECTORY and $RUNNING_DIRECTORY"
+        exit 1
+    fi
+}
 
 # Initialize the MariaDB data directory
-if ! mysql_install_db --user=mysql --datadir=$DB_DIRECTORY > /dev/null ; then
-    echo "Failed to create database"
-    exit 1
-fi
-echo "Database directory created"
+initialize_db() {
+    if ! mysql_install_db --user=$MYSQL_USER --datadir=$DB_DIRECTORY > /dev/null; then
+        log_message "Failed to create database"
+        exit 1
+    fi
+    log_message "Database directory created successfully"
+}
 
-# Create a temporary SQL script with environment variables resolved
-if [ -f init_db.sql ]; then
-    envsubst < init_db.sql > $INIT_SH
-else
-    echo "init_db.sql not found"
-    exit 1
-fi
+# Process initialization SQL script
+process_init_script() {
+    if [ -f "$INIT_SQL" ]; then
+        if ! envsubst < "$INIT_SQL" > "$TEMP_SQL"; then
+            log_message "Failed to process $INIT_SQL"
+            exit 1
+        fi
+    else
+        log_message "$INIT_SQL not found"
+        exit 1
+    fi
+}
 
-# Execute the initialization script in bootstrap mode
-mysqld $OPTIONS --bootstrap < $INIT_SH
+# Execute initialization script
+execute_init_script() {
+    if ! mysqld $OPTIONS --bootstrap < "$TEMP_SQL"; then
+        log_message "Failed to execute initialization script"
+        exit 1
+    fi
+    rm -f "$TEMP_SQL"
+}
 
-# Remove the temporary script
-rm -f $INIT_SH
+# Main execution
+set_permissions
+initialize_db
+process_init_script
+execute_init_script
 
-# Run the SQL server in the foreground
+log_message "Starting MySQL server"
 exec mysqld $OPTIONS --console
