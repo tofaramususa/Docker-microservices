@@ -1,11 +1,10 @@
-FROM debian:11
+FROM alpine:3.19
 
 USER root
 
-RUN apt-get update && apt-get install -y \
+RUN apk -i upgrade && apt -i add\
     mariadb-server \
     mariadb-client \
-    gettext
 
 RUN mkdir -p /var/lib/mysql /run/mysqld
 RUN chown -R mysql:mysql /var/lib/mysql /run/mysqld

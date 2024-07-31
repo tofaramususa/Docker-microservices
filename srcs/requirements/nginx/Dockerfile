@@ -1,6 +1,6 @@
-FROM debian:11
+FROM alpine:3.19
 
-RUN apt-get update && apt-get install -y \
+RUN apk -i upgrade && apk -i add\
 	nginx \
 	openssl
 

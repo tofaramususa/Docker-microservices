@@ -1,14 +1,13 @@
-version: '3.1'
 
 services:
   nginx:
     container_name: nginx
-    #image: nginx
     build: 
       context: ./requirements/nginx/
       dockerfile: Dockerfile
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
     ports:
       - "443:443"
     volumes:
@@ -16,7 +15,8 @@ services:
     networks:
       - inception-network
     restart: always
-    env_file: .env
+    env_file: 
+      - .env
 
   mariadb:
     container_name: mariadb
@@ -34,7 +34,8 @@ services:
   wordpress:
     container_name: wordpress
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     build: 
       context: ./requirements/wordpress/
       dockerfile: Dockerfile

@@ -1,10 +1,10 @@
-FROM	alpine:3.17.5
+FROM	alpine:3.19
 # https://hub.docker.com/_/alpine latest version 3.18.x
 
 ARG		PHP_VERSION=81
-		# DB_NAME \
-		# DB_USER \
-		# DB_PASS \
+		# WORDPRESS_DB_NAME \
+		# WORDPRESS_DB_USER \
+		# WORDPRESS_DB_PASS \
 		# DOMAIN_NAME \
 		# WPADUSER \
 		# WPADPASS \

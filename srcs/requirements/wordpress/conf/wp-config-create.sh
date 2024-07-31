@@ -2,9 +2,9 @@
 if [ ! -f "/var/www/html/wordpress/wp-config.php" ]; then
 cat << EOF > /var/www/html/wordpress/wp-config.php
 <?php
-define( 'DB_NAME', '${DB_DATABASE}' );
-define( 'DB_USER', '${DB_USER}' );
-define( 'DB_PASSWORD', '${DB_PASS}' );
+define( 'DB_NAME', '${WORDPRESS_DB_DATABASE}' );
+define( 'DB_USER', '${WORDPRESS_DB_USER}' );
+define( 'DB_PASSWORD', '${WORDPRESS_DB_PASS}' );
 define( 'DB_HOST', 'mariadb' );
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', '' );
