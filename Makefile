@@ -1,42 +1,41 @@
-all:start
+NAME = Inception
 
+all: start
+
+# need explaination for difference between start and build below and the use of --env-file
+# what is the difference between up and build in docker
 start:
-	mkdir -p /home/$$USER/data/mariadb-vol
-	mkdir -p /home/$$USER/data/wordpress-vol
-	docker compose -f ./srcs/docker-compose.yml up --build -d
+	@echo "\033[33mLaunching configuration $(NAME)...\033[0m"
+	@bash srcs/requirements/wordpress/tools/make_dir.sh 
+	@docker compose -f srcs/docker-compose.yml --env-file srcs/.env up -d 
 
-stop:
-	docker compose -f ./srcs/docker-compose.yml down
+build:
+	@echo "\033[33mBuilding configuration $(NAME)...\033[0m"
+	@bash srcs/requirements/wordpress/tools/make_dir.sh 
+	@docker compose -f srcs/docker-compose.yml --env-file srcs/.env up -d --build
 
-debug:
-	mkdir -p /home/$$USER/data/mariadb-vol
-	mkdir -p /home/$$USER/data/wordpress-vol
-	docker compose -f ./srcs/docker-compose.yml --verbose up --build -d	
+up:
+	@docker compose -f srcs/docker-compose.yml --env-file srcs/.env up -d
 
-# clean:
-# 	@-docker compose -f ./srcs/docker-compose.yml down
-# 	@-docker stop `docker ps -qa`
-# 	@-docker rm `docker ps -qa`
-# 	@-docker rmi -f `docker images -qa`
-# 	@-docker volume rm `docker volume ls -q`
-# 	@-docker network rm `docker network ls -q`
-# 	@-sudo rm -rf /home/$$USER/data/mariadb-vol
-# 	@-sudo rm -rf /home/$$USER/data/wordpress-vol
-# 	@-sudo docker system prune -f -a
+down:
+	@echo "\033[33mStopping configuration $(NAME)...\033[0m"
+	@docker compose -f srcs/docker-compose.yml --env-file srcs/.env down
+
+re: down build
+
+clean:
+	@echo "\033[33mCleaning configuration $(NAME)...\033[0m"
+	@docker system prune -a
+	@sudo rm -rf ~/data/wordpress/*
+	@sudo rm -rf ~/data/mariadb/*
 
 fclean:
-	@-printf "Total clean of all configurations docker\n"
-	@-docker compose -f ./srcs/docker-compose.yml down
-	@-docker stop `docker ps -qa`
-	@-docker system prune --all --force --volumes
-	@-docker network prune --force
-	@-docker volume prune --force
-	@-sudo rm -rf ~/data/wordpress/*
-	@-sudo rm -rf ~/data/mariadb/*
+	@echo "\033[33mTotal clean of all Docker configurations\033[0m"
+	@docker stop $$(docker ps -qa)
+	@docker system prune --all --force --volumes
+	@docker network prune --force
+	@docker volume prune --force
+	@sudo rm -rf ~/data/wordpress/*
+	@sudo rm -rf ~/data/mariadb/*
 
-re: stop start
-
-list_volumes:
-	docker volume ls 
-
-.PHONY = start all clean debug list_volumes stop fclean
+.PHONY = start all build down re clean fclean
