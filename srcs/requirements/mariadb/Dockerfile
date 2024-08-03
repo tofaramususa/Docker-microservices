@@ -3,10 +3,9 @@ FROM alpine:3.19
 USER root 
 # make the user running these commands to be root
 
-RUN apk -i upgrade && apk -i add\
-    mariadb-server \
-    mariadb-client \
-	# install the packages and mariadb and client
+RUN apk upgrade --update-cache
+
+RUN apk add --no-cache mariadb mariadb-client
 
 RUN mkdir -p /var/lib/mysql /run/mysqld
 # create two directories and sub directories
