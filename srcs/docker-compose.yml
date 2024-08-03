@@ -1,4 +1,39 @@
 services:
   
   nginx:
-    build:
+    build: 
+      context: ./requirements/nginx/
+      dockerfile: Dockerfile
+    container_name: nginx
+    depends_on:
+      - wordpress
+    ports:
+      - "443:443"
+    networks:
+      - inception-bridge
+    volumes:
+      - wp-volume:/var/www/
+    restart: always
+  
+  mariadb:
+    container_name: mariadb
+    build: 
+      context: ./requirements/mariadb/
+      dockerfile: Dockerfile
+    args:
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_ROOT: ${DB_ROOT}
+    volumes:
+      - db-volume:/var/lib/mysql
+    ports:
+      - "3306:3306"  #do we really need this though
+    restart: always
+    networks:
+      - inception-network
+    env_file:
+      - .env 
+
+
+  
