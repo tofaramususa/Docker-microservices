@@ -26,13 +26,9 @@ services:
         DB_ROOT: ${DB_ROOT}
     volumes:
       - db-volume:/var/lib/mysql
-    ports:
-      - "3306:3306"  #do we really need this though
     restart: always
     networks:
       - inception-network
-    env_file:
-      - .env
 
   wordpress:
     container_name: wordpress

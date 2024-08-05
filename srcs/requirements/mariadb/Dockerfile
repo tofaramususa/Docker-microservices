@@ -1,22 +1,28 @@
-FROM alpine:3.19
+FROM debian:bullseye
 
-RUN	apk update && apk add --no-cache mariadb mariadb-client
+ARG DB_NAME \
+    DB_USER \
+    DB_PASS \
+    DB_ROOT
 
-RUN	mkdir /var/run/mysqld; \
-    chmod 777 /var/run/mysqld; \
+RUN apt-get update && apt-get upgrade -y && apt-get install -y mariadb-server mariadb-client
+
+RUN mkdir -p /var/run/mysqld /var/lib/mysql && \
+	chmod 777 /var/lib/mysql && \
+    chown -R mysql:mysql /var/run/mysqld /var/lib/mysql && \
+    chmod 777 /var/run/mysqld && \
     { echo '[mysqld]'; \
       echo 'skip-host-cache'; \
       echo 'skip-name-resolve'; \
       echo 'bind-address=0.0.0.0'; \
-    } | tee  /etc/my.cnf.d/docker.cnf; \
-    sed -i "s|skip-networking|skip-networking=0|g" \
-      /etc/my.cnf.d/mariadb-server.cnf
+    } | tee /etc/mysql/mariadb.conf.d/docker.cnf && \
+    sed -i "s|skip-networking|skip-networking=0\nmax_allowed_packet=256M|g" /etc/mysql/mariadb.conf.d/50-server.cnf
 
-RUN	mysql_install_db --user=mysql --datadir=/var/lib/mysql
+RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 EXPOSE 3306
 
 COPY conf/create_db.sh .
-RUN	sh create_db.sh && rm create_db.sh
+RUN bash create_db.sh && rm create_db.sh
 USER mysql
-CMD ["/usr/bin/mysqld", "--skip-log-error"]
+CMD ["mysqld", "--skip-log-error"]
