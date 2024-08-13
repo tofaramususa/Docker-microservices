@@ -14,25 +14,6 @@ services:
       - wp-volume:/var/www/
     restart: always
   
-  mariadb:
-    container_name: mariadb
-    build: 
-      context: ./requirements/mariadb/
-      dockerfile: Dockerfile
-      args:
-        DB_NAME: ${DB_NAME}
-        DB_USER: ${DB_USER}
-        DB_PASS: ${DB_PASS}
-        DB_ROOT: ${DB_ROOT}
-    volumes:
-      - db-volume:/var/lib/mysql
-    restart: always
-    networks:
-      - inception-network
-    expose:
-      - "3306"
-    env_file:
-      - .env
 
   wordpress:
     container_name: wordpress
@@ -60,6 +41,25 @@ services:
     expose:
       - "9000"
 
+  mariadb:
+    container_name: mariadb
+    build: 
+      context: ./requirements/mariadb/
+      dockerfile: Dockerfile
+      args:
+        DB_NAME: ${DB_NAME}
+        DB_USER: ${DB_USER}
+        DB_PASS: ${DB_PASS}
+        DB_ROOT: ${DB_ROOT}
+    volumes:
+      - db-volume:/var/lib/mysql
+    restart: always
+    networks:
+      - inception-network
+    expose:
+      - "3306"
+    env_file:
+      - .env
 
 volumes:
   wp-volume:
