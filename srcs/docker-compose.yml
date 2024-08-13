@@ -66,13 +66,13 @@ volumes:
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: '~/data/wordpress'
+      device: '/home/tmususa/data/wordpress_vol'
 
   db-volume:
     driver_opts:
       o: 'bind'
       type: 'none'
-      device: '~/data/mariadb'
+      device: '/home/tmususa/data/mariadb_vol'
 
 networks:
     inception-network:
