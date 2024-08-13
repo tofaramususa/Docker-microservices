@@ -1,21 +1,26 @@
-#!/bin/bash
+#!/bin/sh
 
-service mariadb start
+#for simplicity
+DATA_DIR=/var/lib/mysql
+RUN_DIR=/run/mysqld
+INIT_DB_SCRIPT=tmp_script.sql
+MYSQL_OPTIONS="--user=mysql --skip-name-resolve --skip-networking=0 --bind-address=0.0.0.0"
 
-sleep 1
-
-if [ -d "/var/lib/mysql/$DB_NAME" ]
-then 
-
-	echo "Database already exists"
-else
-	mariadb -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
-        mariadb  -e "CREATE USER IF NOT EXISTS ${DB_USER}@'localhost' IDENTIFIED BY '${DB_PASS}';"
-        mariadb -e "GRANT ALL PRIVILEGES ON ${DB_NAME}.* TO \`${DB_USER}\`@'%' IDENTIFIED BY '${DB_PASS}';"
-        # mariadb -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${DB_ROOT}';"
-        mariadb -e "FLUSH PRIVILEGES;"
+# initializing our data directory to store dbs!
+if ! mysql_install_db --user=mysql --datadir=$DATA_DIR > /dev/null ; then
+    echo "{Data directory instialization --- FAILURE!}"
+    return 1
 fi
+echo "{Data directory instialization --- SUCCESSSS!}"
 
-service mariadb stop
+# creating a tmp sql script with env variables resolved (gonna delete it after execution)
+envsubst < db_setup.sql > $INIT_DB_SCRIPT
 
-mysqld_safe
+# feeding mysql deamon our init script, (bootstrap mode just means start from a clean slate)
+mysqld $MYSQL_OPTIONS --bootstrap < $INIT_DB_SCRIPT
+
+# gotta delete it coz our passwords are exposed in this file
+rm $INIT_DB_SCRIPT
+
+# Run the SQL server in the foreground (serer output to the STDOUT for debugging)
+mysqld $MYSQL_OPTIONS --console
