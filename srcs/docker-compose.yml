@@ -24,11 +24,6 @@ services:
         DB_NAME: ${DB_NAME}
         DB_USER: ${DB_USER}
         DB_PASS: ${DB_PASS}
-        DOMAIN_NAME: ${DOMAIN_NAME}
-        WPADUSER: ${WPADUSER}
-        WPUSER1: ${WPUSER1}
-        WPADPASS: ${WPADPASS}
-        WPUSER1PASS: ${WPUSER1PASS}
     depends_on:
       - mariadb
     restart: always

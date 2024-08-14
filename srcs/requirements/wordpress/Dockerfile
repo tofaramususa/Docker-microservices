@@ -36,18 +36,18 @@ RUN 	curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cl
   		&& cp wp-cli.phar /usr/local/bin/wp
 
 
-WORKDIR /var/www
+WORKDIR /var/www/
 
-RUN		wget https://wordpress.org/latest.zip && \
-		unzip latest.zip && \
-		cp -rf wordpress/* . && \
-		rm -rf wordpress latest.zip
+# RUN		wget https://wordpress.org/latest.zip && \
+# 		unzip latest.zip && \
+# 		cp -rf wordpress/* . && \
+# 		rm -rf wordpress latest.zip
 
-COPY 	./conf/wp-config-create.sh .
+# COPY 	./conf/wp-config-create.sh .
 COPY 	./conf/setup.sh /usr/local/bin/
 
 RUN		chmod 777 /usr/local/bin/setup.sh
-RUN 	sh wp-config-create.sh && rm wp-config-create.sh && \
-    	chmod -R 0777 wp-content/
+# RUN 	sh wp-config-create.sh && rm wp-config-create.sh && \
+		# chmod -R 0777 wp-content/
 
 CMD ["/usr/local/bin/setup.sh"]

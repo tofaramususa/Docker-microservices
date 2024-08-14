@@ -3,7 +3,7 @@
 #for simplicity
 DATA_DIR=/var/lib/mysql
 RUN_DIR=/run/mysqld
-INIT_DB_SCRIPT=tmp_script.sql
+INIT_DB_SCRIPT=/tmp/tmp_script.sql
 MYSQL_OPTIONS="--user=mysql --skip-name-resolve --skip-networking=0 --bind-address=0.0.0.0"
 
 # initializing our data directory to store dbs!
@@ -14,7 +14,7 @@ fi
 echo "{Data directory instialization --- SUCCESSSS!}"
 
 # creating a tmp sql script with env variables resolved (gonna delete it after execution)
-envsubst < db_setup.sql > $INIT_DB_SCRIPT
+envsubst < /tmp/db_setup.sql > $INIT_DB_SCRIPT
 
 # feeding mysql deamon our init script, (bootstrap mode just means start from a clean slate)
 mysqld $MYSQL_OPTIONS --bootstrap < $INIT_DB_SCRIPT

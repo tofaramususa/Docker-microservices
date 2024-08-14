@@ -34,6 +34,9 @@ fclean: down
 	@docker volume prune --force
 	@sudo rm -rf /home/tmususa/data/wordpress_vol/*
 	@sudo rm -rf /home/tmususa/data/mariadb_vol/*
+
+rebuild: fclean up
+
 # @rm -rf /home/tmususa/Desktop/inception/srcs/wordpress_vol /home/tmususa/Desktop/inception/srcs/mariadb_vol
 # @docker stop $$(docker ps -qa)
 # @docker system prune --all --force --volumes

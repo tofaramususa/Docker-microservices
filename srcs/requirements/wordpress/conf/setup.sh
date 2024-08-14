@@ -1,20 +1,27 @@
 #!/bin/sh
 
-wp --allow-root --path=/var/www core install \
-  --url="$DOMAIN_NAME" \
-  --title="Tofara's Word-Press" \
-  --admin_user="$WPADUSER" \
-  --admin_password="$WPADPASS" \
-  --admin_email="tmususa@student.42abudhabi.ae"
+wp core download --allow-root --locale=it_US
 
-wp user create "$WPUSER1" "user1@student.42abudhabi.ae" \
+if [ ! -f "/var/www/wp-config.php" ]; then
+
+	wp config create --allow-root --dbname=$DB_NAME --dbuser=$DB_USER --dbpass=$DB_PASS --dbhost=mariadb --dbcharset="utf8" 
+fi
+
+wp core install  --allow-root \
+    --url="$DOMAIN_NAME" \
+    --title="Tofara's WordPress" \
+    --admin_user="$WPADUSER" \
+    --admin_password="$WPADPASS" \
+    --admin_email="$WPADEMAIL"
+
+wp user create   --allow-root "$WPUSER1" "user1@student.42abudhabi.ae" \
   --role=author \
   --user_pass="$WPUSER1PASS" \
-  --allow-root
+ 
 
-wp --allow-root --path=/var/www option update blogname "Tofara's Word-Press"
-wp --allow-root --path=/var/www option update blogdescription "The Inception"
-wp --allow-root --path=/var/www option update blog_public 0
+wp option update blogname "Tofara's Word-Press" --allow-root
+wp option update blogdescription "The Inception" --allow-root
+wp option update blog_public 0 --allow-root
 
 wp theme install twentytwentyone --activate --allow-root
 

@@ -4,7 +4,7 @@ FROM alpine:3.18
 # Installing and Updating package repository and Installing neccessay packages for MariaDB server
 RUN apk update && \
     apk upgrade && \
-    apk add --no-cache mariadb mariadb-client gettext && \
+    apk add --no-cache bash mariadb mariadb-client gettext && \
     rm -rf /var/cache/apk/*
 
 # two directories - first one for storing Dbs, tables and other files, and second one for storing runtime files
@@ -17,10 +17,11 @@ RUN chown -R mysql:mysql /var/lib/mysql /run/mysqld
 WORKDIR /var/lib/mysql
 
 # copying our custom conf file, database initial setup script, and our entrypoing to the contianer
-COPY ./conf/db_setup.sql ./db_setup.sql
-COPY ./tools/script.sh .
+COPY ./conf/db_setup.sql /tmp/db_setup.sql
+
+COPY ./tools/script.sh /tmp/script.sh
 # ---
-RUN chmod 755 ./script.sh
+RUN chmod 755 /tmp/script.sh
 
 # Expose the port for other containers in the network
 EXPOSE 3306
@@ -29,4 +30,4 @@ EXPOSE 3306
 USER mysql
 
 # les go!!!!!!!!!!!!!!!
-CMD [ "sh", "script.sh" ]
+CMD [ "bash", "/tmp/script.sh" ]
