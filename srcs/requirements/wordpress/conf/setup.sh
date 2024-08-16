@@ -1,6 +1,6 @@
 #!/bin/sh
 
-wp core download --allow-root --locale=it_US
+wp core download --allow-root --locale=en_US
 
 if [ ! -f "/var/www/wp-config.php" ]; then
 
