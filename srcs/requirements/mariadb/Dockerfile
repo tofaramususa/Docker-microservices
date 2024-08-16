@@ -1,5 +1,5 @@
 # base image - will give as the basic file structure and linux runtime invironment and more 
-FROM alpine:3.18
+FROM alpine:3.19
 
 # Installing and Updating package repository and Installing neccessay packages for MariaDB server
 RUN apk update && \
