@@ -24,6 +24,9 @@ fclean: down
 	@docker volume prune --force
 	@sudo rm -rf /home/tmususa/data/wordpress_vol/*
 	@sudo rm -rf /home/tmususa/data/mariadb_vol/*
+	@sudo rm -rf /home/tmususa/data/wordpress_vol
+	@sudo rm -rf /home/tmususa/data/mariadb_vol
+	@sudo rm -rf /home/tmususa/data
 
 rebuild: fclean up
 
