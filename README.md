@@ -2,38 +2,47 @@
 
 ## Overview
 
-This project is a containerized web application stack consisting of WordPress, MariaDB, and Nginx. It leverages Docker to create a reproducible and scalable environment for deploying a WordPress site with a MariaDB database and Nginx web server.
+This project is a containerized web application stack that includes WordPress, MariaDB, and Nginx. It utilizes Docker to provide a consistent, scalable environment for deploying a WordPress site with a MariaDB database backend and an Nginx web server.
+
+## Technology Stack
+
+- **Docker**: Used for containerization of services.
+- **WordPress**: The content management system running on PHP and Alpine Linux.
+- **MariaDB**: The database system used for storing WordPress data.
+- **Nginx**: The web server that serves the WordPress site and handles HTTPS connections.
+- **Alpine Linux**: A lightweight Linux distribution used for the WordPress container.
+- **Debian**: The Linux distribution used for the Nginx container.
+- **PHP-FPM**: The FastCGI Process Manager for handling PHP processing.
+- **SSL**: Secure Sockets Layer, used for encrypting connections to the web server.
+
+## Project Structure and Files
+
+- **WordPress Dockerfile**: [`Dockerfile`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/wordpress/Dockerfile) for setting up the WordPress container.
+- **MariaDB Configuration**: Initialization scripts and SQL setup in [`config.sh`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/mariadb/conf/config.sh) and [`init_db.sql`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/mariadb/conf/init_db.sql).
+- **Nginx Dockerfile**: [`Dockerfile`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/nginx/Dockerfile) for configuring the Nginx container with SSL.
+- **WordPress Initialization Script**: [`wp-init.sh`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/wordpress/conf/wp-init.sh) for automating the WordPress setup.
 
 ## Concepts
 
 ### Containerization with Docker
-
-The project uses Docker to create isolated environments for each component of the stack. This ensures that each service has its dependencies met without conflicting with others.
+Docker provides isolated environments for each service, ensuring dependency management without conflicts.
 
 ### WordPress Configuration
-
-The WordPress service is built on an Alpine Linux base image, chosen for its small footprint and security features. The [`Dockerfile`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/wordpress/Dockerfile) installs PHP and its extensions required by WordPress, and configures PHP-FPM to listen on a TCP port instead of a Unix socket for better compatibility with container networking.
+WordPress runs on an Alpine Linux base image for efficiency and security, with PHP and its extensions installed and configured.
 
 ### MariaDB Setup
-
-MariaDB is set up with a custom [`config.sh`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/mariadb/conf/config.sh) script that initializes the database directory and creates a new database with user privileges as defined in the [`init_db.sql`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/mariadb/conf/init_db.sql) script.
+MariaDB is initialized with custom scripts to set up the database and user privileges.
 
 ### Nginx as a Web Server
-
-Nginx is configured to serve the WordPress site over HTTPS using a self-signed SSL certificate generated in the [`Dockerfile`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/nginx/Dockerfile). The configuration file for Nginx is placed in the appropriate directory to be included when the Nginx service starts.
+Nginx serves the WordPress site using HTTPS with a self-signed SSL certificate and is configured to handle web traffic efficiently.
 
 ### Initialization and Configuration Scripts
-
-Scripts such as [`wp-init.sh`](//local/Users/tofaramususa/Desktop/docker-file:srcs/requirements/wordpress/conf/wp-init.sh) are used to automate the installation and initial configuration of WordPress after the container starts. This includes setting up the WordPress admin user and installing necessary plugins.
-
-## Details
-
-- **Base Images**: Alpine Linux for WordPress, Debian for Nginx.
-- **Services**: WordPress, MariaDB, Nginx.
-- **Configuration**: PHP-FPM, MariaDB initialization, Nginx SSL.
-- **Automation**: WordPress core download and configuration, MariaDB user and database setup.
-- **Security**: Use of self-signed SSL certificates for HTTPS.
+Scripts are used to automate the setup process of WordPress and MariaDB, streamlining the deployment.
 
 ## Usage
 
-To use this project, you will need Docker installed on your system. Once Docker is set up, you can build and run the containers using the provided Dockerfiles and configuration scripts.
+To deploy this project, Docker must be installed on your system. You can then build and run the containers using the provided Dockerfiles and configuration scripts.
+
+## Security
+
+The project uses self-signed SSL certificates to enable HTTPS, enhancing the security of the web application.
